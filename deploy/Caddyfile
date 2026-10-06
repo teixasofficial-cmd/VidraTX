@@ -1,0 +1,35 @@
+{
+	email {$EMAIL_ACME}
+}
+
+{$DOMINIO} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	@webhook path /api/whatsapp/webhook /api/whatsapp/webhook/*
+	handle @webhook {
+		respond 404
+	}
+
+	@api path /api/* /auth/* /actuator/health /actuator/health/*
+	handle @api {
+		reverse_proxy backend:8080
+	}
+
+	handle {
+		root * /srv
+		@assets path /assets/*
+		@paginas not path /assets/*
+		header @assets Cache-Control "public, max-age=31536000, immutable"
+		header @paginas Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server
+	}
+}

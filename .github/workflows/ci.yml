@@ -1,0 +1,192 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  backend:
+    name: Backend (testes com MySQL)
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: vidratx
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot --silent"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Testes
+        env:
+          DB_PASSWORD: root
+          JWT_SECRET: chave-da-ci-com-pelo-menos-32-bytes-000000
+        run: mvn -B verify
+      - name: Relatórios dos testes
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports
+
+  dashboard:
+    name: Dashboard (tipos, lint, testes e build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+  whatsapp-service:
+    name: whatsapp-service (build e testes)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: whatsapp-service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: whatsapp-service/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+
+  deploy:
+    name: Imagens Docker e arquivos de deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scripts (shellcheck)
+        run: shellcheck -x deploy/scripts/*.sh dev.sh
+      - name: docker-compose.yml válido
+        working-directory: deploy
+        run: |
+          cp .env.example .env
+          sed -i -e 's/^MYSQL_ROOT_PASSWORD=.*/MYSQL_ROOT_PASSWORD=x/' \
+                 -e 's/^DB_PASSWORD=.*/DB_PASSWORD=x/' \
+                 -e 's/^JWT_SECRET=.*/JWT_SECRET=x/' \
+                 -e 's/^WHATSAPP_GATEWAY_TOKEN=.*/WHATSAPP_GATEWAY_TOKEN=x/' .env
+          docker compose config --quiet
+      - name: Caddyfile válido
+        run: >-
+          docker run --rm -v "$PWD/deploy/Caddyfile:/etc/caddy/Caddyfile:ro"
+          -e DOMINIO=painel.exemplo.com.br -e EMAIL_ACME=ci@exemplo.com.br
+          caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+      - name: Imagem do backend
+        run: docker build -t vidratx-backend .
+      - name: Comando de hash de senha na imagem
+        run: |
+          hash=$(printf 'senha-da-ci-123\n' | docker run --rm -i vidratx-backend gerar-hash-senha)
+          [[ "$hash" == \$2a\$12\$* ]]
+      - name: Imagem do whatsapp-service
+        run: docker build -t vidratx-whatsapp whatsapp-service
+      - name: Imagem do painel
+        run: docker build -t vidratx-web dashboard
+
+  e2e:
+    name: E2E (roteiros contra o backend real)
+    if: github.event_name != 'push' || github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: vidratx
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot --silent"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependências dos roteiros
+        run: |
+          pip install requests
+          command -v mysql || (sudo apt-get update && sudo apt-get install -y mysql-client)
+      - name: Empacotar o backend
+        run: mvn -B -q -DskipTests package
+      - name: Subir gateway falso e backend
+        run: |
+          python3 e2e/gateway_falso.py > gateway.log 2>&1 &
+          TZ=UTC DB_PASSWORD=root JWT_SECRET=chave-da-ci-com-pelo-menos-32-bytes-000000 \
+            WHATSAPP_GATEWAY_URL=http://localhost:3333 WHATSAPP_GATEWAY_TOKEN=qualquer \
+            WHATSAPP_AVISO_ESPERA_INTERVALO=PT10S CADASTRO_PUBLICO_HABILITADO=true \
+            java -jar target/vidratx-0.0.1-SNAPSHOT.jar > backend.log 2>&1 &
+          for _ in $(seq 1 90); do
+            curl -sf http://localhost:8080/actuator/health > /dev/null && exit 0
+            sleep 2
+          done
+          cat backend.log
+          exit 1
+      - name: Roteiros
+        working-directory: e2e
+        run: |
+          status=0
+          for roteiro in testes_whatsapp testes_preco_permissao testes_e2e dia_inteiro testes_quebra testes_regras testes_cenarios; do
+            echo "::group::$roteiro"
+            python3 "$roteiro.py" | tee "saida_$roteiro.txt" || status=1
+            echo "::endgroup::"
+            if grep -q '\[FALHA\]' "saida_$roteiro.txt"; then
+              echo "::error::$roteiro tem verificações falhando"
+              status=1
+            fi
+          done
+          python3 -c "
+          import json, sys
+          problemas = [p for p in json.load(open('resultado_dia.json')) if p[1]]
+          for nome, n, detalhe in problemas:
+              print(f'::error::dia_inteiro: {nome}: {n} ({detalhe})')
+          sys.exit(1 if problemas else 0)
+          " || status=1
+          exit $status
+      - name: Logs e resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e
+          path: |
+            backend.log
+            gateway.log
+            e2e/saida_*.txt
+            e2e/resultado_*.json

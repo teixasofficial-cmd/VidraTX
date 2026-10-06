@@ -1,0 +1,8 @@
+node_modules
+dist
+test
+.env
+*.log
+auth_sessions
+fila_webhook
+envios-idempotencia.json*

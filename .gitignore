@@ -1,0 +1,15 @@
+target/
+*.class
+.idea/
+*.iml
+out/
+.mvn/wrapper/maven-wrapper.jar
+HELP.md
+.dev-logs/
+.dev-secrets
+.dev-secrets.json
+
+midia-whatsapp/
+
+deploy/.env
+deploy/backups/

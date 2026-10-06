@@ -1,0 +1,128 @@
+name: vidratx
+
+x-logs: &logs
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: vidratx
+      MYSQL_USER: vidratx
+      MYSQL_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD no .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?defina MYSQL_ROOT_PASSWORD no .env}
+    volumes:
+      - mysql-dados:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_ROOT_PASSWORD\" mysqladmin ping -h 127.0.0.1 -uroot --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    logging: *logs
+
+  backend:
+    build:
+      context: ..
+    image: vidratx-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_USERNAME: vidratx
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      WHATSAPP_GATEWAY_URL: http://whatsapp:3333
+      WHATSAPP_GATEWAY_TOKEN: ${WHATSAPP_GATEWAY_TOKEN:?defina WHATSAPP_GATEWAY_TOKEN no .env}
+      CORS_ALLOWED_ORIGINS: https://${DOMINIO:?defina DOMINIO no .env}
+      VIDRATX_FUSO_HORARIO: ${VIDRATX_FUSO_HORARIO:-America/Sao_Paulo}
+      ALERTA_WEBHOOK_URL: ${ALERTA_WEBHOOK_URL:-}
+      ALERTA_WHATSAPP_DESCONECTADO_MINUTOS: ${ALERTA_WHATSAPP_DESCONECTADO_MINUTOS:-30}
+      SERVER_FORWARD_HEADERS_STRATEGY: native
+    volumes:
+      - midia-whatsapp:/app/midia-whatsapp
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080 && printf \"GET /actuator/health/readiness HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3 && grep -q UP <&3'"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+    logging: *logs
+
+  whatsapp:
+    build:
+      context: ../whatsapp-service
+    image: vidratx-whatsapp
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      GATEWAY_TOKEN: ${WHATSAPP_GATEWAY_TOKEN}
+      SPRING_BASE_URL: http://backend:8080
+    volumes:
+      - whatsapp-dados:/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3333/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    logging: *logs
+
+  web:
+    build:
+      context: ../dashboard
+    image: vidratx-web
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMINIO: ${DOMINIO}
+      EMAIL_ACME: ${EMAIL_ACME:?defina EMAIL_ACME no .env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-dados:/data
+      - caddy-config:/config
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2019/config/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging: *logs
+
+  backup:
+    image: mysql:8.4
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    entrypoint: ["bash", "/scripts/backup.sh"]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      BACKUP_HORA: ${BACKUP_HORA:-3}
+      BACKUP_RETENCAO_DIAS: ${BACKUP_RETENCAO_DIAS:-14}
+      TZ: ${VIDRATX_FUSO_HORARIO:-America/Sao_Paulo}
+    volumes:
+      - ./scripts:/scripts:ro
+      - ./backups:/backups
+      - midia-whatsapp:/midia:ro
+    logging: *logs
+
+volumes:
+  mysql-dados:
+  midia-whatsapp:
+  whatsapp-dados:
+  caddy-dados:
+  caddy-config:

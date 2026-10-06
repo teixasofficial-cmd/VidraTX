@@ -1,0 +1,40 @@
+{
+  "name": "vidratx-dashboard",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Painel administrativo do VidraTX — único, igual para todas as empresas (multi-tenant pelo login). O site público personalizado de cada vidraçaria é um frontend separado.",
+  "author": "Guilherme Teixeira <teixasofficial@gmail.com>",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "tsc -b --noEmit && eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@fontsource/inter": "^5.1.0",
+    "@tanstack/react-query": "^5.62.0",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.18.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^15.15.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.71.0",
+    "vite": "^6.0.3",
+    "vitest": "^3.2.7"
+  }
+}

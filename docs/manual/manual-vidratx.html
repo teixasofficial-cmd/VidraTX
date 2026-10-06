@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual VidraTX</title>
+<meta name="description" content="Manual do usuário do VidraTX: do primeiro contato no WhatsApp até a instalação.">
+<!--
+  Manual do usuário e material de vendas do VidraTX.
+  Imagens em docs/manual/imagens/, capturadas do
+  próprio sistema com dados fictícios (Vidraçaria Horizonte).
+  Para gerar o PDF: abra no Chrome ou Edge › Imprimir › Salvar como PDF
+  (A4, margens padrão, com "Gráficos de plano de fundo" marcado).
+-->
+<style>
+  :root {
+    --tinta: #0f172a;
+    --texto: #334155;
+    --suave: #64748b;
+    --linha: #e2e8f0;
+    --fundo: #ffffff;
+    --fundo-2: #f8fafc;
+    --marca: #4f46e5;
+    --marca-escura: #3730a3;
+    --marca-clara: #eef2ff;
+    --verde: #047857;
+    --verde-claro: #ecfdf5;
+    --ambar: #b45309;
+    --ambar-claro: #fffbeb;
+    --capa: #0f172a;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    margin: 0;
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  main { max-width: 820px; margin: 0 auto; padding: 0 16px 48px; }
+
+  h1, h2, h3 { color: var(--tinta); line-height: 1.2; margin: 0; }
+  h2 { font-size: 21pt; letter-spacing: -0.01em; }
+  h3 { font-size: 12.5pt; margin: 18px 0 6px; }
+  p { margin: 0 0 10px; }
+  strong { color: var(--tinta); }
+  a { color: var(--marca); }
+
+  /* ---------- Capa ---------- */
+  .capa {
+    background: var(--capa);
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 56px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .capa .logo { display: flex; align-items: center; gap: 12px; }
+  .capa .logo span.v {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--marca); color: #fff; font-weight: 700; font-size: 22px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .capa .logo span.nome { font-size: 22px; font-weight: 600; color: #fff; }
+  .capa h1 { color: #fff; font-size: 40pt; letter-spacing: -0.02em; margin-bottom: 18px; }
+  .capa .promessa { font-size: 20pt; color: #c7d2fe; line-height: 1.3; max-width: 560px; }
+  .capa .sub { margin-top: 28px; font-size: 12pt; color: #94a3b8; }
+  .capa .rodape { font-size: 10pt; color: #94a3b8; border-top: 1px solid #1e293b; padding-top: 14px; }
+
+  /* ---------- Blocos gerais ---------- */
+  .pagina { padding-top: 36px; }
+  .quebra { break-before: page; page-break-before: always; }
+  .intro { font-size: 13pt; color: var(--tinta); }
+
+  .sumario ol { padding-left: 0; list-style: none; counter-reset: s; margin: 0; }
+  .sumario li { border-bottom: 1px dotted var(--linha); padding: 5px 0; }
+  .sumario li a { color: var(--tinta); text-decoration: none; }
+  .sumario .grupo { margin: 18px 0 4px; font-size: 9.5pt; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--marca); }
+  .sumario .num { display: inline-block; width: 2.2em; color: var(--suave); }
+
+  .dores { display: grid; gap: 12px; margin-top: 14px; }
+  .dor { border: 1px solid var(--linha); border-radius: 12px; padding: 14px 16px; background: var(--fundo-2); break-inside: avoid; }
+  .dor .problema { font-weight: 700; color: var(--tinta); margin-bottom: 4px; }
+  .dor .solucao { margin: 0; }
+
+  .passos-inicio { counter-reset: p; list-style: none; padding: 0; margin: 14px 0 0; }
+  .passos-inicio > li {
+    counter-increment: p; position: relative; padding: 12px 0 12px 56px;
+    border-bottom: 1px solid var(--linha); break-inside: avoid;
+  }
+  .passos-inicio > li::before {
+    content: counter(p); position: absolute; left: 0; top: 10px;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--marca); color: #fff; font-weight: 700; font-size: 15pt;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .passos-inicio .titulo { font-weight: 700; color: var(--tinta); display: block; }
+  .onde { font-size: 10.5pt; color: var(--suave); }
+
+  /* ---------- Seção de funcionalidade ---------- */
+  .funcao { padding-top: 30px; }
+  .etiquetas { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .etiqueta {
+    font-size: 8.5pt; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    border-radius: 999px; padding: 3px 10px; background: var(--marca-clara); color: var(--marca-escura);
+  }
+  .etiqueta.imp { background: #f1f5f9; color: #334155; }
+  .meta { font-size: 10.5pt; color: var(--suave); margin: 8px 0 14px; }
+  .meta b { color: var(--texto); }
+
+  .tela {
+    border: 2px dashed #cbd5e1; border-radius: 12px; background: var(--fundo-2);
+    min-height: 120px; padding: 16px; margin: 10px 0 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    color: var(--suave); font-size: 10.5pt; break-inside: avoid;
+  }
+  .tela .rotulo { font-weight: 700; color: #475569; letter-spacing: .06em; font-size: 9pt; margin-bottom: 6px; }
+
+  ol.legenda { list-style: none; counter-reset: l; padding: 0; margin: 6px 0 14px; font-size: 10.5pt; break-inside: avoid; }
+  ol.legenda li { counter-increment: l; position: relative; padding: 3px 0 3px 30px; }
+  ol.legenda li::before {
+    content: counter(l); position: absolute; left: 0; top: 3px;
+    width: 21px; height: 21px; border-radius: 50%; background: var(--tinta); color: #fff;
+    font-size: 9pt; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  }
+
+  .serve { font-size: 12.5pt; color: var(--tinta); margin: 10px 0 4px; }
+  ol.como { margin: 0 0 6px; padding-left: 22px; }
+  ol.como li { padding: 2px 0; }
+
+  .dica, .ganho { border-radius: 10px; padding: 12px 16px; margin: 12px 0 0; break-inside: avoid; }
+  .dica { background: var(--ambar-claro); border-left: 5px solid #f59e0b; }
+  .ganho { background: var(--verde-claro); border-left: 5px solid #10b981; }
+  .dica .t, .ganho .t { font-weight: 700; font-size: 10pt; letter-spacing: .06em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+  .dica .t { color: var(--ambar); }
+  .ganho .t { color: var(--verde); }
+  .dica p:last-child, .ganho p:last-child { margin-bottom: 0; }
+
+  figure.tela-img { margin: 12px 0 6px; break-inside: avoid; page-break-inside: avoid; }
+  figure.tela-img img {
+    display: block; max-width: 100%; height: auto; margin: 0 auto;
+    border: 1px solid var(--linha); border-radius: 10px; box-shadow: 0 6px 22px rgba(15, 23, 42, .10);
+  }
+  figure.tela-img figcaption { font-size: 9.5pt; color: var(--suave); margin-top: 6px; text-align: center; }
+  figure.tela-img .arq { font-family: ui-monospace, Menlo, Consolas, monospace; color: #475569; }
+  .figs-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .figs-2 figure.tela-img img { max-height: 520px; }
+  .msg-cliente {
+    background: #dcf8c6; border-radius: 12px 12px 12px 2px; padding: 12px 16px; margin: 10px 0;
+    max-width: 440px; font-size: 10.5pt; color: #1f2937; break-inside: avoid;
+  }
+  .msg-cliente .t { display: block; font-size: 8.5pt; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #166534; margin-bottom: 6px; }
+  .msg-cliente p { margin: 0; }
+
+
+  table { width: 100%; border-collapse: collapse; font-size: 10.5pt; margin: 10px 0; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--linha); }
+  th { background: var(--fundo-2); color: var(--tinta); font-size: 9.5pt; letter-spacing: .04em; text-transform: uppercase; }
+  tr { break-inside: avoid; }
+
+  .perfis td:first-child { font-weight: 700; color: var(--tinta); white-space: nowrap; }
+
+  /* ---------- Fluxo ---------- */
+  .fluxo { list-style: none; padding: 0; margin: 14px 0; counter-reset: f; }
+  .fluxo li {
+    counter-increment: f; position: relative; padding: 10px 0 14px 52px; break-inside: avoid;
+    border-left: 3px solid var(--marca-clara); margin-left: 17px; padding-left: 34px;
+  }
+  .fluxo li::before {
+    content: counter(f); position: absolute; left: -19px; top: 6px;
+    width: 34px; height: 34px; border-radius: 50%; background: var(--marca); color: #fff;
+    font-weight: 700; display: flex; align-items: center; justify-content: center;
+  }
+  .fluxo li.extra { counter-increment: none; }
+  .fluxo li.extra::before { content: "+"; background: #94a3b8; }
+  .fluxo .etapa { display: block; font-weight: 700; color: var(--tinta); font-size: 12.5pt; }
+  .fluxo .tela-ref { display: block; font-size: 10.5pt; color: var(--marca-escura); margin-top: 2px; }
+
+  /* ---------- FAQ ---------- */
+  .faq details, .faq .q { border-bottom: 1px solid var(--linha); padding: 12px 0; break-inside: avoid; }
+  .faq .pergunta { font-weight: 700; color: var(--tinta); margin-bottom: 4px; font-size: 12.5pt; }
+
+  /* ---------- Chamada final ---------- */
+  .cta {
+    background: var(--capa); color: #e2e8f0; border-radius: 18px; padding: 36px 32px; margin-top: 18px;
+    break-inside: avoid;
+  }
+  .cta h2 { color: #fff; font-size: 26pt; margin-bottom: 12px; }
+  .cta p { color: #cbd5e1; font-size: 13pt; }
+  .cta .botao {
+    display: inline-block; margin-top: 12px; background: #22c55e; color: #052e16; font-weight: 700;
+    font-size: 15pt; padding: 14px 22px; border-radius: 12px; text-decoration: none;
+  }
+  .cta .fone { font-size: 18pt; font-weight: 700; color: #fff; margin-top: 16px; }
+
+  /* ---------- Impressão (PDF A4) ---------- */
+  @page { size: A4; margin: 14mm 14mm 14mm; }
+  @page :first { margin: 0; }
+  @media print {
+    body { font-size: 10.8pt; line-height: 1.45; }
+    .tela { min-height: 92px; padding: 12px; }
+    h3 { margin: 12px 0 4px; }
+    .dica, .ganho { padding: 9px 14px; margin-top: 9px; }
+    ol.legenda { margin-bottom: 10px; }
+    .meta { margin: 6px 0 10px; }
+    .faq .q { padding: 7px 0; }
+    .faq .q p { margin-bottom: 5px; }
+    .faq .pergunta { font-size: 11.5pt; margin-bottom: 2px; }
+    main { max-width: none; padding: 0; }
+    .capa { min-height: 297mm; height: 297mm; }
+    .funcao { padding-top: 22px; }
+    .funcao h2 { break-after: avoid; }
+    figure.tela-img img { max-height: 150mm; width: auto; }
+    .figs-2 figure.tela-img img { max-height: 120mm; }
+    .funcao h2 { font-size: 19pt; }
+    .pagina { padding-top: 0; }
+    a { color: inherit; text-decoration: none; }
+    .cta a.botao { color: #052e16; }
+  }
+
+  @media (max-width: 560px) {
+    body { font-size: 11.5pt; }
+    h2 { font-size: 18pt; }
+    .capa { padding: 40px 22px; }
+    .capa h1 { font-size: 32pt; }
+    .capa .promessa { font-size: 17pt; }
+    th, td { padding: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= CAPA ================= -->
+<section class="capa">
+  <div class="logo"><span class="v">V</span><span class="nome">VidraTX</span></div>
+  <div>
+    <h1>VidraTX</h1>
+    <p class="promessa">Do primeiro “oi” no WhatsApp até a instalação concluída.</p>
+    <p class="sub">Manual do usuário para a vidraçaria: dono, vendedor, medidor e instalador.</p>
+  </div>
+  <p class="rodape">Teste grátis por 14 dias · WhatsApp +55 11 96309-1578</p>
+</section>
+
+<main>
+
+<!-- ================= SUMÁRIO ================= -->
+<section class="pagina sumario quebra" id="sumario">
+  <h2>Sumário</h2>
+  <p class="grupo">Comece aqui</p>
+  <ol>
+    <li><a href="#em-1-minuto"><span class="num">1</span>Em 1 minuto</a></li>
+    <li><a href="#primeiros-passos"><span class="num">2</span>Primeiros passos: do acesso ao primeiro orçamento enviado</a></li>
+  </ol>
+  <p class="grupo">O essencial</p>
+  <ol>
+    <li><a href="#whatsapp"><span class="num">3</span>Seu WhatsApp responde na hora, mesmo com você na obra</a></li>
+    <li><a href="#atendimentos"><span class="num">4</span>Nenhum cliente esquecido no WhatsApp</a></li>
+    <li><a href="#orcamento"><span class="num">5</span>Orçamento certo de primeira, sem calculadora</a></li>
+    <li><a href="#aprovacao"><span class="num">6</span>O cliente aprova respondendo “1”</a></li>
+    <li><a href="#medicao"><span class="num">7</span>Visita de medição marcada sem vai-e-vem</a></li>
+    <li><a href="#visao-geral"><span class="num">8</span>Seu dia inteiro numa tela só</a></li>
+    <li><a href="#funil"><span class="num">9</span>Todos os orçamentos à vista, do “oi” ao fechado</a></li>
+    <li><a href="#tabela"><span class="num">10</span>Sua tabela de preços pronta em 8 passos</a></li>
+  </ol>
+  <p class="grupo">Também importante</p>
+  <ol>
+    <li><a href="#estimativa"><span class="num">11</span>Responda “quanto fica?” antes de medir</a></li>
+    <li><a href="#producao"><span class="num">12</span>Nada sai para a obra sem conferência</a></li>
+    <li><a href="#instalacao"><span class="num">13</span>Equipe certa, no dia combinado com o cliente</a></li>
+    <li><a href="#pos-venda"><span class="num">14</span>Pós-venda com começo, meio e fim</a></li>
+    <li><a href="#clientes"><span class="num">15</span>A história de cada cliente num clique</a></li>
+    <li><a href="#parametros"><span class="num">16</span>Sua margem protegida em todo orçamento</a></li>
+    <li><a href="#agenda"><span class="num">17</span>Mensagem automática só em horário comercial</a></li>
+    <li><a href="#usuarios"><span class="num">18</span>Cada um da equipe com o seu acesso</a></li>
+    <li><a href="#empresa"><span class="num">19</span>O nome da sua vidraçaria em cada mensagem</a></li>
+  </ol>
+  <p class="grupo">Cadastros de apoio</p>
+  <ol>
+    <li><a href="#servicos"><span class="num">20</span>Os serviços que a vidraçaria oferece</a></li>
+    <li><a href="#materiais"><span class="num">21</span>Os materiais da produção</a></li>
+  </ol>
+  <p class="grupo">Para fechar</p>
+  <ol>
+    <li><a href="#fluxo"><span class="num">22</span>Um serviço do começo ao fim</a></li>
+    <li><a href="#faq"><span class="num">23</span>Perguntas frequentes</a></li>
+    <li><a href="#teste"><span class="num">24</span>Teste grátis por 14 dias</a></li>
+  </ol>
+  <p class="grupo">Anexo</p>
+  <ol>
+    <li><a href="#operador"><span class="num">A</span>Painel do operador VidraTX (equipe VidraTX)</a></li>
+  </ol>
+</section>
+
+<!-- ================= EM 1 MINUTO ================= -->
+<section class="pagina quebra" id="em-1-minuto">
+  <h2>Em 1 minuto</h2>
+  <p class="intro" style="margin-top:12px">
+    O VidraTX organiza a vidraçaria <strong>do pedido no WhatsApp até a instalação</strong>.
+    Ele atende o cliente, calcula o orçamento, manda para aprovação,
+    marca medição e instalação e acompanha a produção.
+  </p>
+  <p>
+    É feito para <strong>vidraçarias de pequeno porte</strong>: o dono, quem vende,
+    quem mede e quem instala usam o mesmo painel, cada um com o seu login.
+    Funciona no navegador, no computador ou no celular.
+  </p>
+
+  <h3>As 3 dores que ele resolve</h3>
+  <div class="dores">
+    <div class="dor">
+      <p class="problema">“O cliente chama no WhatsApp e eu só vejo à noite.”</p>
+      <p class="solucao">O <strong>atendimento automático</strong> responde na hora, pega nome, serviço,
+      medidas e fotos e deixa a solicitação pronta para você orçar.</p>
+    </div>
+    <div class="dor">
+      <p class="problema">“Faço o orçamento na calculadora, erro a folga e esqueço a ferragem.”</p>
+      <p class="solucao">O <strong>cálculo automático</strong> usa a tipologia, desconta a folga e gera as
+      peças de corte. O vidro sai pelo m² da sua tabela, e o kit e a ferragem que você escolher entram com o seu preço.</p>
+    </div>
+    <div class="dor">
+      <p class="problema">“Marcar visita e cobrar resposta toma o meu dia.”</p>
+      <p class="solucao">Orçamento e datas vão <strong>pelo WhatsApp, com resposta por número</strong>.
+      O sistema lembra o cliente sozinho e mostra de quem é a vez.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRIMEIROS PASSOS ================= -->
+<section class="pagina quebra" id="primeiros-passos">
+  <h2>Primeiros passos</h2>
+  <p class="intro" style="margin-top:12px">Do acesso ao primeiro orçamento enviado, em 5 passos.</p>
+
+  <ol class="passos-inicio">
+    <li>
+      <span class="titulo">Entre no painel</span>
+      Você recebe o endereço do painel, o identificador da sua vidraçaria, o e-mail e a senha.
+      Entre com os três. Troque a senha no ícone de chave, no topo da tela.
+      <span class="onde">Tela “Entrar”</span>
+  <figure class="tela-img">
+    <img src="imagens/01-login.jpg" alt="Tela de entrada do VidraTX com empresa, e-mail e senha" loading="lazy">
+    <figcaption><span class="arq">01-login.jpg</span> · Tela “Entrar”: identificador da empresa, e-mail e senha.</figcaption>
+  </figure>
+    </li>
+    <li>
+      <span class="titulo">Monte sua tabela de preços</span>
+      Clique em <strong>Configuração Expressa</strong> e siga os 8 passos:
+      m² do temperado, cores, espelho, box instalado, visita, regime e margem.
+      <span class="onde">Menu › Tabela de Preços › Configuração Expressa</span>
+    </li>
+    <li>
+      <span class="titulo">Conecte o WhatsApp da vidraçaria</span>
+      Clique em <strong>Conectar WhatsApp</strong> e escaneie o QR code com o celular da empresa.
+      A partir daí, o atendimento automático já responde seus clientes.
+      <span class="onde">Menu › Configurações › WhatsApp</span>
+    </li>
+    <li>
+      <span class="titulo">Crie o orçamento</span>
+      Cadastre o cliente com o WhatsApp (ou use a solicitação que chegou pelo atendimento).
+      Clique em <strong>Novo orçamento</strong> e em <strong>Adicionar item</strong>: tipologia, vão e vidro.
+      Em <strong>Adicionar</strong>, escolha o kit e a mão de obra da sua tabela.
+      <span class="onde">Menu › Orçamentos › Novo orçamento</span>
+    </li>
+    <li>
+      <span class="titulo">Revise e envie</span>
+      O gerente confere os valores (ou clica em <strong>Aceitar todas</strong>).
+      Arraste o card para <strong>Orçamento final</strong> e clique em
+      <strong>Enviar orçamento pelo WhatsApp</strong>.
+      <span class="onde">Orçamentos › abra o orçamento</span>
+      O botão de envio só aparece na etapa <strong>Orçamento final</strong>, e é arrastando o card no funil que o orçamento chega lá.
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 3. WHATSAPP / BOT ================= -->
+<section class="funcao" id="whatsapp">
+  <div class="etiquetas"><span class="etiqueta">Essencial</span></div>
+  <h2>Seu WhatsApp responde na hora, mesmo com você na obra</h2>
+  <p class="meta"><b>Onde fica:</b> Configurações › WhatsApp (para conectar). O atendimento acontece no WhatsApp da própria vidraçaria.
+    · <b>Quem usa:</b> Administrador ou Gerente conecta; o atendimento é automático.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/21-whatsapp.jpg" alt="Tela WhatsApp com a conexão ativa" loading="lazy">
+    <figcaption><span class="arq">21-whatsapp.jpg</span> · Configurações › WhatsApp, com o número conectado.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/11-atendimento-solicitacao.jpg" alt="Conversa do atendimento automático vista no painel" loading="lazy">
+    <figcaption><span class="arq">11-atendimento-solicitacao.jpg</span> · A conversa do atendimento automático, vista no painel: o pedido já chega pronto.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/26-whatsapp-qr.jpg" alt="Tela WhatsApp com o QR code para conectar" loading="lazy">
+    <figcaption><span class="arq">26-whatsapp-qr.jpg</span> · Antes de conectar: o QR code aparece no próprio painel (o da imagem é só um exemplo).</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>No topo da tela WhatsApp: selo <strong>Conectado</strong>, com o número e a hora da conexão.</li>
+    <li>Logo abaixo: “Tudo certo por aqui”, ou o aviso de mensagens na fila e não entregues nos últimos 7 dias.</li>
+    <li>Na conversa: as perguntas do atendimento automático (à direita) e as respostas do cliente (à esquerda).</li>
+    <li>No topo da conversa: <strong>Criar orçamento a partir desta solicitação</strong>.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> atender na hora todo cliente que chama no WhatsApp e deixar o pedido pronto para orçar.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Abra</strong> Configurações › WhatsApp e clique em <strong>Conectar WhatsApp</strong>.</li>
+    <li><strong>Escaneie</strong> o QR code no celular da empresa: WhatsApp › Aparelhos conectados › Conectar um aparelho.</li>
+    <li><strong>Deixe</strong> o atendimento trabalhar: ele pede o nome, cadastra o cliente e coleta serviço, medidas aproximadas, endereço e fotos.</li>
+    <li><strong>Abra</strong> a Visão geral e, na solicitação que chegou, clique em <strong>Criar orçamento</strong>.</li>
+    <li><strong>Assuma</strong> a conversa quando quiser: responda pela tela Atendimentos.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Peça a foto do vão com a trena aparecendo. A foto vai junto com a solicitação e aparece no orçamento.</p>
+    <p>Áudio o sistema ainda não ouve. O próprio atendimento pede para o cliente escrever.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>O cliente é respondido na hora, até à noite e no fim de semana.
+    Você começa o orçamento com nome, serviço e fotos na mão, sem perguntar tudo de novo.</p>
+    <p>Se o cliente pede uma pessoa, ou o atendimento não entende, a conversa vai para a sua fila.</p>
+  </div>
+</section>
+
+<!-- ================= 4. ATENDIMENTOS ================= -->
+<section class="funcao" id="atendimentos">
+  <div class="etiquetas"><span class="etiqueta">Essencial</span></div>
+  <h2>Nenhum cliente esquecido no WhatsApp</h2>
+  <p class="meta"><b>Onde fica:</b> menu › Atendimentos (o número verde mostra quantos esperam)
+    · <b>Quem usa:</b> todos os perfis.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/09-atendimentos.jpg" alt="Lista de atendimentos do WhatsApp" loading="lazy">
+    <figcaption><span class="arq">09-atendimentos.jpg</span> · Atendimentos, aba “Esperando resposta”.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/10-atendimento-conversa.jpg" alt="Conversa em andamento com uma atendente" loading="lazy">
+    <figcaption><span class="arq">10-atendimento-conversa.jpg</span> · Conversa assumida pela gerente: a resposta dela aparece em roxo.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>No menu: o número verde ao lado de <strong>Atendimentos</strong> mostra quantos clientes esperam uma pessoa.</li>
+    <li>No topo da lista: abas <strong>Esperando resposta · Em atendimento · Encerrados · Todos</strong>.</li>
+    <li>Em cada conversa: quem está atendendo e o aviso laranja “Cliente esperando resposta”.</li>
+    <li>Na conversa aberta: o selo “Com Paula Ribeiro” diz quem assumiu. Embaixo, o campo “Escreva uma mensagem…”.</li>
+    <li>Rodapé: <strong>Transferir · Devolver ao bot · Encerrar · Histórico</strong> (e <strong>Assumir atendimento</strong> quando ninguém assumiu ainda).</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> mostrar quem está esperando uma pessoa e deixar qualquer um da equipe responder dali.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Abra</strong> Atendimentos e clique na conversa que está esperando.</li>
+    <li><strong>Clique</strong> em Assumir atendimento, ou simplesmente responda: ao responder, você assume.</li>
+    <li><strong>Escreva</strong> e clique em Enviar. A mensagem sai pelo WhatsApp da vidraçaria.</li>
+    <li><strong>Passe</strong> a conversa para um colega em Transferir, ou devolva ao bot.</li>
+    <li><strong>Encerre</strong> quando resolver. Se o cliente ainda tiver assunto em aberto, o sistema avisa antes.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Mande orçamento e datas pelos botões do orçamento, não digitados na conversa.
+    Assim a resposta “1” do cliente volta sozinha para o sistema.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Acabou o “vi sua mensagem só agora”. A conversa não fica presa no celular de uma pessoa: a equipe toda vê a fila.</p>
+    <p>Passou do prazo que você definiu, a conversa aparece como atrasada e o cliente recebe um aviso de demora, uma vez.</p>
+  </div>
+</section>
+
+<!-- ================= 5. ORÇAMENTO ================= -->
+<section class="funcao" id="orcamento">
+  <div class="etiquetas"><span class="etiqueta">Essencial</span></div>
+  <h2>Orçamento certo de primeira, sem calculadora</h2>
+  <p class="meta"><b>Onde fica:</b> Orçamentos › abra um orçamento › Itens e cálculo
+    · <b>Quem usa:</b> todos montam; preço final, desconto e valor digitado à mão ficam com Gerente e Administrador.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/05-orcamento-item-modal.jpg" alt="Janela Novo item do orçamento" loading="lazy" style="width:672px">
+    <figcaption><span class="arq">05-orcamento-item-modal.jpg</span> · “Adicionar item”: tipologia, vão em cm, vidro e os componentes da sua tabela.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/04-orcamento-calculo.jpg" alt="Orçamento com box e espelho calculados" loading="lazy">
+    <figcaption><span class="arq">04-orcamento-calculo.jpg</span> · Orçamento com um box frontal fumê e um espelho: peças de corte, linhas de valor e o resumo.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>Janela <strong>Novo item</strong>: tipologia, ambiente, largura e altura do vão, vidro, espessura, cor, acabamento e quantidade.</li>
+    <li>No fim da janela: <strong>+ Adicionar</strong>, para incluir kit, ferragem, mão de obra ou deslocamento da sua tabela.</li>
+    <li>No item: as peças de corte já calculadas (“Folha 1: 700×1900mm”).</li>
+    <li>Linhas de valor: vidro (m² × seu preço), perdas, kit e instalação. Cada valor pode ser ajustado.</li>
+    <li>À direita, <strong>Resumo financeiro</strong>: preço sugerido, o <strong>Preço final</strong>, que o gerente pode fixar,
+    e a <strong>Margem real</strong> (aqui 30,4%, em verde: acima da margem desejada).</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> transformar a medida do vão em peças, custo e preço, com a sua tabela e a sua margem.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Clique</strong> em Adicionar item e escolha a tipologia: box frontal, box de canto, box de abrir, espelho, porta, janela, guarda-corpo, sacada, tampo ou prateleira, vidro avulso.</li>
+    <li><strong>Informe</strong> o ambiente, a largura e a altura do vão (em cm), o vidro (comum, temperado, laminado ou espelho), a espessura, a cor, o acabamento e a quantidade.</li>
+    <li><strong>Adicione</strong> kit, ferragem, mão de obra ou deslocamento em <strong>+ Adicionar</strong>, escolhendo da Tabela de Preços. Eles não entram sozinhos.</li>
+    <li><strong>Confira</strong> as peças de corte, os alertas e o preço sugerido no resumo.</li>
+    <li><strong>Peça</strong> ao gerente para revisar os valores em cinza (ou clicar em Aceitar todas) e, se for o caso, fixar o preço final com desconto ou acréscimo.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Lance a medida do <strong>vão</strong>, não da peça. O sistema desconta a folga da tipologia
+    (no box frontal, 12 mm na largura do vão) e arredonda o corte para múltiplos de 50 mm, que é o padrão.</p>
+    <p>Box com vidro comum? O sistema avisa que box pede temperado ou laminado. Guarda-corpo pede laminado.</p>
+    <p>Em todo box, lembre de incluir o kit: é ele que cobre ferragem e roldanas.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Sem calculadora e sem caderno. A peça grande demais para a chapa é avisada antes do corte.</p>
+    <p>O vendedor não dá desconto por conta própria: preço final e valor digitado à mão ficam com o gerente.</p>
+  </div>
+</section>
+
+<!-- ================= 6. APROVAÇÃO ================= -->
+<section class="funcao" id="aprovacao">
+  <div class="etiquetas"><span class="etiqueta">Essencial</span></div>
+  <h2>O cliente aprova respondendo “1”</h2>
+  <p class="meta"><b>Onde fica:</b> Orçamentos › abra o orçamento › Enviar orçamento pelo WhatsApp
+    · <b>Quem usa:</b> todos os perfis.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/27-orcamento-final-envio.jpg" alt="Orçamento na etapa final com o botão de envio" loading="lazy">
+    <figcaption><span class="arq">27-orcamento-final-envio.jpg</span> · Etapa Orçamento final: o botão de envio aparece embaixo dos itens.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/06-orcamento-enviado.jpg" alt="Orçamento enviado aguardando o cliente" loading="lazy">
+    <figcaption><span class="arq">06-orcamento-enviado.jpg</span> · Depois do envio: o painel espera a resposta do cliente.</figcaption>
+  </figure>
+  <div class="msg-cliente">
+    <span class="t">Mensagem que o cliente recebe (texto real do sistema)</span>
+    <p>Olá, Juliana! Segue o seu orçamento nº 1 da Vidraçaria Horizonte:<br>• Box frontal (2 folhas) (Banheiro social) — 1200 × 1900 mm, vidro temperado 8 mm incolor<br>• Espelho (Banheiro social) — 800 × 1000 mm, vidro espelho 4 mm incolor<br>Valor total: R$ 1.149,90<br>Válido até 02/10/2026.<br>Responda:<br>1 - Aprovar<br>2 - Pedir alteração<br>3 - Falar com um atendente<br>4 - Não tenho interesse</p>
+  </div>
+  <ol class="legenda">
+    <li>Embaixo dos itens: <strong>Enviar orçamento pelo WhatsApp</strong> (só na etapa Orçamento final).</li>
+    <li>Depois do envio, no topo: a faixa azul “Aguardando o cliente”, com a validade.</li>
+    <li>Abaixo do título: “Enviado em …” e a situação da mensagem (Enviada, Entregue, Lida).</li>
+    <li>No rodapé: <strong>Revisar orçamento</strong> e os botões para marcar à mão: aprovado, perdido ou expirado.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> mandar o orçamento completo e deixar o cliente aprovar, pedir alteração ou recusar com um número.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Arraste</strong> o card para Orçamento final, na tela Orçamentos.</li>
+    <li><strong>Clique</strong> em Enviar orçamento pelo WhatsApp e confirme o valor.</li>
+    <li><strong>Acompanhe</strong> a situação: Enviada, Entregue, Lida.</li>
+    <li><strong>Espere</strong> a resposta: <strong>1</strong> aprova e abre a ordem de serviço sozinha; <strong>2</strong> pede alteração; <strong>3</strong> chama um atendente; <strong>4</strong> marca como perdido.</li>
+    <li><strong>Revise</strong> quando precisar mudar algo: clique em Revisar orçamento e envie a nova versão. A anterior deixa de valer.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>O botão fica travado enquanto faltar algo: medida do vão, vidro sem preço na tabela ou valor sem revisão.
+    O que falta aparece em “Ainda não pode ser enviado ao cliente”.</p>
+    <p>O cliente aceitou por telefone? Use <strong>Marcar como aprovado</strong>.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Sem ligar para cobrar resposta: sem retorno em 24 horas (o padrão), o sistema manda um lembrete educado, uma vez.</p>
+    <p>Venceu a validade? O orçamento expira sozinho e o cliente é avisado. Aprovou? A OS já está aberta.</p>
+  </div>
+</section>
+
+<!-- ================= 7. MEDIÇÃO ================= -->
+<section class="funcao" id="medicao">
+  <div class="etiquetas"><span class="etiqueta">Essencial</span></div>
+  <h2>Visita de medição marcada sem vai-e-vem</h2>
+  <p class="meta"><b>Onde fica:</b> Orçamentos › abra o orçamento › painel Medição
+    · <b>Quem usa:</b> todos os perfis.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/30-medicao-proposta.jpg" alt="Proposta de medição aguardando o cliente" loading="lazy">
+    <figcaption><span class="arq">30-medicao-proposta.jpg</span> · Proposta enviada pelo WhatsApp, esperando o cliente confirmar.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/29-medicao-confirmada.jpg" alt="Medição confirmada pelo cliente" loading="lazy">
+    <figcaption><span class="arq">29-medicao-confirmada.jpg</span> · Cliente respondeu “sim”: a visita está confirmada.</figcaption>
+  </figure>
+  <div class="msg-cliente">
+    <span class="t">Mensagem que o cliente recebe (texto real do sistema)</span>
+    <p>Olá, Lucas! Podemos agendar a visita técnica para medição para sábado, 26/09/2026 às 10:00, no endereço Rua das Palmeiras, 120 - Pinheiros?<br>Responda:<br>1 - Confirmar<br>2 - Sugerir outra data<br>3 - Falar com um atendente</p>
+  </div>
+  <ol class="legenda">
+    <li>Selo de situação e data: “Aguardando confirmação do cliente”, depois “Confirmada”.</li>
+    <li>Aviso laranja: a data ainda não vale até o cliente confirmar.</li>
+    <li>Proposta esperando: <strong>Cliente confirmou por telefone · Propor outra data · Cancelar</strong>.</li>
+    <li>Visita confirmada: <strong>Reagendar · Marcar como realizada · Cancelar</strong>.</li>
+    <li>No rodapé do painel: <strong>Ver histórico de datas propostas</strong>.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> combinar a visita pelo WhatsApp, com confirmação do cliente por escrito.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Escolha</strong> data e hora no painel Medição (e o endereço, se quiser).</li>
+    <li><strong>Clique</strong> em Enviar proposta. O cliente responde <strong>1 Confirmar</strong>, <strong>2 Sugerir outra data</strong> ou <strong>3 Falar com um atendente</strong>.</li>
+    <li><strong>Responda</strong> à sugestão do cliente (“sexta às 14h”): os botões Aceitar e Recusar aparecem quando ele sugere outra data.</li>
+    <li><strong>Use</strong> “Cliente confirmou por telefone” quando combinar por ligação.</li>
+    <li><strong>Marque</strong> como realizada depois da visita.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Cobra visita técnica? Coloque o valor em Parâmetros de Cálculo. Ele vai escrito na proposta, e ninguém é pego de surpresa.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>A agenda para de depender da memória de alguém, e respeita quantas medições a empresa faz ao mesmo tempo.</p>
+    <p>Proposta sem resposta vira “Precisa de nova data”. O card anda sozinho: visita confirmada vai para Visita agendada, medição feita vai para Medido.</p>
+  </div>
+</section>
+
+<!-- ================= 8. VISÃO GERAL ================= -->
+<section class="funcao" id="visao-geral">
+  <div class="etiquetas"><span class="etiqueta">Essencial</span></div>
+  <h2>Seu dia inteiro numa tela só</h2>
+  <p class="meta"><b>Onde fica:</b> menu › Dashboard (é a primeira tela)
+    · <b>Quem usa:</b> todos os perfis.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/02-visao-geral.jpg" alt="Visão geral com pendências, agenda e números" loading="lazy">
+    <figcaption><span class="arq">02-visao-geral.jpg</span> · Visão geral, a primeira tela depois de entrar.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>No topo: a faixa verde de clientes esperando resposta no WhatsApp.</li>
+    <li>Cartões do dia: <strong>Sua vez · Aguardando cliente · Medições hoje · Instalações hoje</strong>.</li>
+    <li>À esquerda, <strong>Próximas ações</strong>: etiquetas Urgente e Sua vez, e o botão <strong>Criar orçamento</strong>.</li>
+    <li>À direita, <strong>Agenda dos próximos 7 dias</strong>, com equipe e endereço.</li>
+    <li>No rodapé: em aberto, aprovados, perdidos, taxa de conversão e valor aprovado.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> mostrar o que precisa de você agora e o que está esperando o cliente.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Entre</strong> no painel: a Visão geral abre primeiro.</li>
+    <li><strong>Clique</strong> na faixa de clientes esperando para ir direto à fila do WhatsApp.</li>
+    <li><strong>Trabalhe</strong> as Próximas ações de cima para baixo; cada item abre o orçamento, a OS ou a conversa.</li>
+    <li><strong>Crie</strong> o orçamento das solicitações do WhatsApp pelo botão Criar orçamento.</li>
+    <li><strong>Veja</strong> quem ainda deve resposta em “Ver itens aguardando o cliente”.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Comece o dia pelo cartão <strong>Sua vez</strong>: são os itens que só andam se a empresa agir.
+    Apareceu aviso de mensagem não entregue? Confira a conexão do WhatsApp.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Sem caderno de pendências e sem grupo da equipe para lembrar quem faz o quê.
+    Cada item já diz de quem é a vez: da empresa, do cliente ou do sistema.</p>
+  </div>
+</section>
+
+<!-- ================= 9. FUNIL ================= -->
+<section class="funcao" id="funil">
+  <div class="etiquetas"><span class="etiqueta">Essencial</span></div>
+  <h2>Todos os orçamentos à vista, do “oi” ao fechado</h2>
+  <p class="meta"><b>Onde fica:</b> menu › Orçamentos
+    · <b>Quem usa:</b> todos os perfis.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/03-funil-kanban.jpg" alt="Funil de orçamentos em colunas" loading="lazy">
+    <figcaption><span class="arq">03-funil-kanban.jpg</span> · Orçamentos no modo Kanban.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/36-orcamento-novo.jpg" alt="Janela Novo orçamento com cliente, validade e observações" loading="lazy" style="width:512px">
+    <figcaption><span class="arq">36-orcamento-novo.jpg</span> · Janela <strong>Novo orçamento</strong>.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>No topo, à direita: <strong>Kanban · Lista</strong> e <strong>Novo orçamento</strong>.</li>
+    <li>Números do funil: orçamentos em aberto, valor em negociação e taxa de conversão.</li>
+    <li>Colunas: Novo contato, Pré-orçamento, Visita agendada, Medido, Orçamento final, Enviado, Aprovado, Perdido.</li>
+    <li>Em cada card: cliente, valor, situação da medição e de quem é a vez. Arraste para mudar de etapa.</li>
+    <li>Janela <strong>Novo orçamento</strong>: o cliente (obrigatório), a validade e as observações (opcionais).
+    Os itens entram depois, dentro do orçamento.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> ver em que pé está cada orçamento e quanto dinheiro está em negociação.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Abra</strong> Orçamentos e escolha Kanban ou Lista.</li>
+    <li><strong>Clique</strong> em Novo orçamento, escolha o cliente e, se quiser, a validade e as observações.</li>
+    <li><strong>Arraste</strong> o card entre as etapas de elaboração, até Orçamento final.</li>
+    <li><strong>Escolha</strong> o motivo ao arrastar para Perdido: preço alto, escolheu concorrente, desistiu, sem retorno…</li>
+    <li><strong>Filtre</strong> a lista para ver só enviados, aprovados ou perdidos.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Registre sempre o motivo da perda. Se “preço alto” aparece toda semana, é hora de olhar a margem e a tabela.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Você sabe quanto tem na mesa e quantos orçamentos viram serviço, sem planilha.
+    E o card não vai para Medido sem a medição ter sido feita: o funil mostra o que aconteceu de verdade.</p>
+  </div>
+</section>
+
+<!-- ================= 10. TABELA ================= -->
+<section class="funcao" id="tabela">
+  <div class="etiquetas"><span class="etiqueta">Essencial</span></div>
+  <h2>Sua tabela de preços pronta em 8 passos</h2>
+  <p class="meta"><b>Onde fica:</b> menu › Tabela de Preços › Configuração Expressa
+    · <b>Quem usa:</b> Gerente e Administrador alteram; todos consultam.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/15-configuracao-expressa.jpg" alt="Assistente Configuração Expressa no passo do box instalado" loading="lazy">
+    <figcaption><span class="arq">15-configuracao-expressa.jpg</span> · Configuração Expressa, passo 6 de 8: o valor do box instalado.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/14-tabela-precos.jpg" alt="Tabela de preços preenchida" loading="lazy">
+    <figcaption><span class="arq">14-tabela-precos.jpg</span> · Tabela de Preços com vidros, kit, instalação, ferragem e deslocamento.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/37-tabela-novo-item.jpg" alt="Janela Novo item da tabela com categoria, unidade, vidro, custo e preço" loading="lazy" style="width:672px">
+    <figcaption><span class="arq">37-tabela-novo-item.jpg</span> · Janela <strong>Novo item da tabela</strong>.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>Barra de progresso do assistente e a pergunta do passo.</li>
+    <li>No topo da tabela: <strong>Configuração Expressa</strong> e <strong>Novo item</strong>.</li>
+    <li>Colunas <strong>Especificação</strong> (tipo · espessura · cor), <strong>Unidade</strong> (m², kit, unidade…), <strong>Custo</strong> e <strong>Preço de venda</strong>.</li>
+    <li>À direita de cada linha: lápis para editar e lixeira.</li>
+    <li>Janela <strong>Novo item da tabela</strong>: categoria (vidro, ferragem, kit, mão de obra, deslocamento, outro), unidade e descrição.
+    No vidro, também tipo, espessura, cor e acabamento. Embaixo, <strong>Seu custo</strong> (opcional), <strong>Preço de venda</strong> e fornecedor.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> colocar os seus preços no sistema, para todo orçamento sair com o seu valor.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Abra</strong> Tabela de Preços e clique em Configuração Expressa.</li>
+    <li><strong>Diga</strong> se prefere informar o seu custo ou o seu preço de venda.</li>
+    <li><strong>Informe</strong> o m² do temperado 8 mm e 10 mm incolor, quanto cobra a mais por fumê, verde e bronze e, se quiser, o espelho 4 mm.</li>
+    <li><strong>Informe</strong> quanto cobra por um box frontal instalado: o sistema calcula dele o item “kit + mão de obra” e o coloca na tabela. Depois, visita, regime e margem.</li>
+    <li><strong>Complete</strong> em Novo item o que falta: laminado, comum, ferragens, kits, mão de obra, deslocamento.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Cadastre cada combinação que você vende: tipo, espessura e cor.
+    Sem preço para “temperado 10 mm bronze”, por exemplo, o vidro fica fora do valor e o orçamento não sai.</p>
+    <p>O “kit + mão de obra” calibrado vai para a tabela, mas não entra sozinho no orçamento: adicione-o em cada box.</p>
+    <p>Preencha o <strong>Seu custo</strong> de cada item. É com ele que o sistema mostra a margem real quando você trabalha com preço de venda direto.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>A tabela deixa de morar na cabeça do dono. Qualquer um da equipe monta orçamento com o preço certo,
+    e as cores já saem calculadas pelo percentual que você definiu.</p>
+  </div>
+</section>
+
+<!-- ================= 11. ESTIMATIVA ================= -->
+<section class="funcao" id="estimativa">
+  <div class="etiquetas"><span class="etiqueta imp">Importante</span></div>
+  <h2>Responda “quanto fica?” antes de medir</h2>
+  <p class="meta"><b>Onde fica:</b> Orçamentos › abra o orçamento › Enviar estimativa (nas etapas Novo contato, Pré-orçamento e Visita agendada)
+    · <b>Quem usa:</b> todos os perfis.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/28-estimativa-enviada.jpg" alt="Orçamento com a estimativa já enviada" loading="lazy">
+    <figcaption><span class="arq">28-estimativa-enviada.jpg</span> · Topo do orçamento depois de enviar a estimativa.</figcaption>
+  </figure>
+  <div class="msg-cliente">
+    <span class="t">Mensagem que o cliente recebe (texto real do sistema)</span>
+    <p>Olá, Patrícia! Pela descrição que recebemos, o seu serviço deve ficar entre R$ 495,00 e R$ 632,00. É uma estimativa sem compromisso: o valor exato sai depois da medição no local.<br>Se quiser seguir, responda esta mensagem que combinamos a visita.</p>
+  </div>
+  <ol class="legenda">
+    <li>Botão <strong>Enviar estimativa</strong>, no rodapé do orçamento (veja a imagem 04-orcamento-calculo.jpg).</li>
+    <li>Depois do envio: “Estimativa enviada ao cliente em…”, logo abaixo do título.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> dar ao cliente uma faixa de preço com as medidas aproximadas, antes da visita.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Monte</strong> o orçamento com as medidas que o cliente passou.</li>
+    <li><strong>Clique</strong> em Enviar estimativa.</li>
+    <li><strong>Pronto:</strong> o cliente recebe “deve ficar entre R$ X e R$ Y”, sem compromisso, e o card vai para Pré-orçamento.</li>
+    <li><strong>Combine</strong> a medição pelo painel Medição quando ele responder.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>A faixa vai, por padrão, de 10% abaixo a 15% acima do calculado. Costuma errar mais para um lado? Ajuste em Parâmetros de Cálculo.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Quem só queria saber o preço já tem a resposta, e você não gasta uma viagem medindo serviço que não ia fechar.</p>
+  </div>
+</section>
+
+<!-- ================= 12. PRODUÇÃO ================= -->
+<section class="funcao" id="producao">
+  <div class="etiquetas"><span class="etiqueta imp">Importante</span></div>
+  <h2>Nada sai para a obra sem conferência</h2>
+  <p class="meta"><b>Onde fica:</b> menu › Ordens de serviço › abra uma OS
+    · <b>Quem usa:</b> todos veem; Gerente e Administrador mudam a produção.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/17-ordens-servico.jpg" alt="Lista de ordens de serviço" loading="lazy">
+    <figcaption><span class="arq">17-ordens-servico.jpg</span> · Ordens de serviço, com filtro por etapa da produção.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/18-os-producao.jpg" alt="Ordem de serviço em produção" loading="lazy">
+    <figcaption><span class="arq">18-os-producao.jpg</span> · Uma OS em produção: a instalação ainda está travada.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>Filtros: <strong>Todas · Aguardando produção · Em produção · Pronto · Conferido</strong>.</li>
+    <li>Selo da etapa em cada OS.</li>
+    <li>No painel Produção: a data de início e o botão da próxima etapa (<strong>Concluir produção</strong>).</li>
+    <li>Painel Instalação: “só pode ser agendada depois que a produção estiver conferida”.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> acompanhar cada serviço aprovado até a peça pronta e conferida.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Abra</strong> Ordens de serviço: a OS do orçamento aprovado já está lá.</li>
+    <li><strong>Clique</strong> em Iniciar produção quando o serviço entrar em produção.</li>
+    <li><strong>Clique</strong> em Concluir produção quando as peças ficarem prontas.</li>
+    <li><strong>Confira</strong> as peças e clique em Conferir produção.</li>
+    <li><strong>Marque</strong> que a OS não passa por produção quando for só instalação.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Confira medida, espessura e acabamento contra as peças de corte do orçamento antes de clicar em Conferir.
+    É esse clique que libera o agendamento da instalação.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Acabou o “o vidro já ficou pronto?”. Todo mundo vê a etapa de cada serviço.
+    E a instalação só é marcada com a peça conferida: menos viagem perdida e menos retrabalho na obra.</p>
+  </div>
+</section>
+
+<!-- ================= 13. INSTALAÇÃO ================= -->
+<section class="funcao" id="instalacao">
+  <div class="etiquetas"><span class="etiqueta imp">Importante</span></div>
+  <h2>Equipe certa, no dia combinado com o cliente</h2>
+  <p class="meta"><b>Onde fica:</b> Ordens de serviço › abra a OS › painel Instalação
+    · <b>Quem usa:</b> todos os perfis.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/19-os-instalacao-agendada.jpg" alt="Instalação confirmada com equipe" loading="lazy">
+    <figcaption><span class="arq">19-os-instalacao-agendada.jpg</span> · OS com a produção conferida e a instalação confirmada.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>Selo <strong>Confirmada</strong> e a data da instalação.</li>
+    <li>Faixa “Sua vez”: comparecer e marcar como realizada.</li>
+    <li>Endereço e <strong>Equipe</strong> responsável.</li>
+    <li>Botões <strong>Reagendar · Marcar como realizada · Cancelar</strong> e o histórico de datas.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> marcar a instalação com o cliente pelo WhatsApp e registrar quando ela foi feita.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Abra</strong> o painel Instalação da OS com a produção conferida.</li>
+    <li><strong>Escolha</strong> data e hora, a equipe (ex.: “João e Pedro”) e clique em Enviar proposta.</li>
+    <li><strong>Responda</strong> se o cliente sugerir outra data.</li>
+    <li><strong>Clique</strong> em Marcar como realizada no dia, preenchendo o checklist.</li>
+    <li><strong>Pronto:</strong> o cliente recebe “Instalação concluída!” com um agradecimento.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Preencha sempre a equipe. Duas equipes podem instalar no mesmo horário; a mesma equipe, não. O sistema segura o conflito.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>O cliente confirma por escrito, a equipe sabe onde estar e você vê as instalações da semana na Visão geral.</p>
+  </div>
+</section>
+
+<!-- ================= 14. PÓS-VENDA ================= -->
+<section class="funcao" id="pos-venda">
+  <div class="etiquetas"><span class="etiqueta imp">Importante</span></div>
+  <h2>Pós-venda com começo, meio e fim</h2>
+  <p class="meta"><b>Onde fica:</b> Ordens de serviço › abra a OS › painel Pós-venda
+    · <b>Quem usa:</b> todos os perfis.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/20-os-pos-venda.jpg" alt="Instalação realizada e chamado de pós-venda aberto" loading="lazy">
+    <figcaption><span class="arq">20-os-pos-venda.jpg</span> · Instalação realizada, com checklist, e um chamado de pós-venda aberto.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>Instalação <strong>Realizada</strong>, com a data e o <strong>Checklist</strong> registrado.</li>
+    <li>Botão <strong>Abrir chamado</strong>, no painel Pós-venda.</li>
+    <li>Chamado “Aberta — aguardando atendimento”, com o problema relatado.</li>
+    <li>Botão <strong>Iniciar atendimento</strong>.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> registrar o problema relatado depois da instalação e como foi resolvido.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Abra</strong> a OS do serviço e clique em Abrir chamado.</li>
+    <li><strong>Descreva</strong> o problema relatado pelo cliente.</li>
+    <li><strong>Clique</strong> em Iniciar atendimento e anote como foi feito.</li>
+    <li><strong>Registre</strong> a solução.</li>
+    <li><strong>Clique</strong> em Encerrar chamado.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Anote a solução com detalhe (regulagem de roldana, troca de vedação…). Na próxima reclamação parecida, a resposta já está escrita.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Reclamação não se perde em conversa. O histórico fica na OS do serviço, junto com a produção e a instalação.</p>
+  </div>
+</section>
+
+<!-- ================= 15. CLIENTES ================= -->
+<section class="funcao" id="clientes">
+  <div class="etiquetas"><span class="etiqueta imp">Importante</span></div>
+  <h2>A história de cada cliente num clique</h2>
+  <p class="meta"><b>Onde fica:</b> menu › Clientes
+    · <b>Quem usa:</b> todos os perfis.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/12-clientes.jpg" alt="Lista de clientes" loading="lazy">
+    <figcaption><span class="arq">12-clientes.jpg</span> · Clientes, com busca por nome.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/13-cliente-detalhe.jpg" alt="Ficha do cliente com orçamentos e histórico" loading="lazy">
+    <figcaption><span class="arq">13-cliente-detalhe.jpg</span> · Ficha do cliente: contato, orçamentos e histórico.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/35-cliente-novo.jpg" alt="Janela Novo cliente com nome, telefone, WhatsApp, e-mail, CPF/CNPJ, endereço e observações" loading="lazy" style="width:512px">
+    <figcaption><span class="arq">35-cliente-novo.jpg</span> · Janela <strong>Novo cliente</strong>.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>No topo: busca por nome e <strong>Novo cliente</strong>.</li>
+    <li>Na ficha: telefone, WhatsApp, e-mail, CPF/CNPJ, endereço e observações.</li>
+    <li><strong>Orçamentos</strong> do cliente, com a situação e o valor, e o botão <strong>Novo orçamento</strong>.</li>
+    <li><strong>Histórico</strong>: cada passo, com data, hora e quem fez.</li>
+    <li>Janela <strong>Novo cliente</strong>: só o nome é obrigatório. O <strong>WhatsApp</strong>, com DDD, é para onde vão orçamentos e agendamentos.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> guardar contato, orçamentos e tudo o que aconteceu com cada cliente.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Busque</strong> o cliente pelo nome em Clientes.</li>
+    <li><strong>Cadastre</strong> um novo em Novo cliente. O WhatsApp, com DDD, é para onde vão orçamentos e agendamentos.</li>
+    <li><strong>Abra</strong> a ficha para ver orçamentos e histórico.</li>
+    <li><strong>Crie</strong> um orçamento direto da ficha, em Novo orçamento.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Quem chega pelo WhatsApp já entra cadastrado, com nome e número. Complete depois o endereço e o CPF/CNPJ.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Cliente antigo ligou? Você abre a ficha e sabe o que foi orçado, o valor e em que pé ficou.</p>
+  </div>
+</section>
+
+<!-- ================= 16. PARÂMETROS ================= -->
+<section class="funcao" id="parametros">
+  <div class="etiquetas"><span class="etiqueta imp">Importante</span></div>
+  <h2>Sua margem protegida em todo orçamento</h2>
+  <p class="meta"><b>Onde fica:</b> menu › Parâmetros de Cálculo
+    · <b>Quem usa:</b> Gerente e Administrador alteram.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/16-parametros.jpg" alt="Tela de parâmetros de cálculo" loading="lazy">
+    <figcaption><span class="arq">16-parametros.jpg</span> · Parâmetros de Cálculo.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>“Você informa”: <strong>Meu preço de venda direto</strong> ou o seu custo. Ao lado, o regime tributário.</li>
+    <li>Impostos, comissão, margem desejada e margem mínima.</li>
+    <li>Arredondamento do preço final (ex.: terminar em ,90).</li>
+    <li>Medidas e perdas: múltiplo de corte, área mínima, perdas/quebra, tamanho máximo da chapa.</li>
+    <li>Deslocamento, visita técnica, validade da proposta e faixa da estimativa. Embaixo, <strong>Salvar parâmetros</strong>.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> ensinar ao sistema como você forma preço, para ele calcular do seu jeito.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Escolha</strong> se informa o custo (o sistema sugere a venda) ou o preço de venda direto.</li>
+    <li><strong>Preencha</strong> impostos, comissão, margem desejada e margem mínima.</li>
+    <li><strong>Defina</strong> o arredondamento do preço final.</li>
+    <li><strong>Ajuste</strong> medidas e perdas: múltiplo de corte, área mínima por peça, % de quebra e tamanho máximo da chapa.</li>
+    <li><strong>Salve</strong> depois de definir visita, validade padrão e faixa da estimativa.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>A área mínima (padrão 0,25 m²) evita vender espelho pequeno ou prateleira no prejuízo.
+    E margem é sobre a venda, não markup: 25% de margem não é “custo + 25%”.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>A margem real aparece em cada orçamento: verde quando está boa, amarela abaixo da desejada,
+    vermelha abaixo da mínima. Desconto demais? O sistema avisa antes de você enviar.</p>
+    <p>Com “Meu preço de venda direto”, a margem é calculada sobre o <strong>Seu custo</strong> da Tabela de Preços:
+    preencha o custo dos itens que você usa (vidros, kits, mão de obra). Um componente com valor digitado à mão
+    não tem custo cadastrado e, com ele no orçamento, a margem não aparece.</p>
+  </div>
+</section>
+
+<!-- ================= 17. AGENDA ================= -->
+<section class="funcao" id="agenda">
+  <div class="etiquetas"><span class="etiqueta imp">Importante</span></div>
+  <h2>Mensagem automática só em horário comercial</h2>
+  <p class="meta"><b>Onde fica:</b> Configurações › Empresa › Agenda e mensagens automáticas
+    · <b>Quem usa:</b> Gerente e Administrador.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/32-agenda.jpg" alt="Painel de agenda e mensagens automáticas" loading="lazy">
+    <figcaption><span class="arq">32-agenda.jpg</span> · Configurações › Empresa › Agenda e mensagens automáticas.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>Duração da medição e da instalação, e quantas medições ao mesmo tempo.</li>
+    <li><strong>Lembretes a partir de / até</strong> (hora).</li>
+    <li>Fuso horário, antecedência mínima para propor data e prazo para responder quem pediu atendente.</li>
+    <li>Botão <strong>Salvar agenda</strong>.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> dizer ao sistema como é a sua agenda e em que horário ele pode mandar mensagem automática.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Informe</strong> quanto dura uma medição e uma instalação.</li>
+    <li><strong>Diga</strong> quantas medições a empresa faz ao mesmo tempo.</li>
+    <li><strong>Defina</strong> o horário dos lembretes (ex.: das 8h às 18h) e o fuso horário.</li>
+    <li><strong>Defina</strong> a antecedência mínima para propor uma data.</li>
+    <li><strong>Salve</strong> depois de definir o prazo para responder quem pediu atendente.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Lembretes e avisos respeitam esse horário. As respostas do atendimento automático, não: cliente que chama à noite é respondido na hora.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>O cliente não recebe cobrança às 23h, e a agenda não marca mais visitas no mesmo horário do que a empresa dá conta.</p>
+  </div>
+</section>
+
+<!-- ================= 18. USUÁRIOS ================= -->
+<section class="funcao" id="usuarios">
+  <div class="etiquetas"><span class="etiqueta imp">Importante</span></div>
+  <h2>Cada um da equipe com o seu acesso</h2>
+  <p class="meta"><b>Onde fica:</b> menu › Usuários
+    · <b>Quem usa:</b> Administrador.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/23-usuarios.jpg" alt="Lista de usuários com perfis" loading="lazy">
+    <figcaption><span class="arq">23-usuarios.jpg</span> · Usuários da empresa, com o perfil de cada um.</figcaption>
+  </figure>
+  <div class="figs-2">
+  <figure class="tela-img">
+    <img src="imagens/38-usuario-novo.jpg" alt="Janela Novo usuário com nome, e-mail, senha inicial e perfil" loading="lazy">
+    <figcaption><span class="arq">38-usuario-novo.jpg</span> · Janela <strong>Novo usuário</strong>.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/39-trocar-senha.jpg" alt="Janela Trocar minha senha com senha atual e nova senha" loading="lazy" style="max-width:75%">
+    <figcaption><span class="arq">39-trocar-senha.jpg</span> · <strong>Trocar minha senha</strong> (ícone de chave, no topo).</figcaption>
+  </figure>
+  </div>
+  <ol class="legenda">
+    <li>Botão <strong>Novo usuário</strong>, no topo à direita.</li>
+    <li>Cada pessoa com nome, e-mail e perfil (Administrador, Gerente, Funcionário).</li>
+    <li>À direita: lápis para editar (inclusive desativar) e lixeira.</li>
+    <li>Janela <strong>Novo usuário</strong>: nome, e-mail, senha inicial e perfil.</li>
+    <li><strong>Trocar minha senha</strong>: qualquer pessoa, em qualquer perfil, troca a própria senha pelo ícone de chave
+    no topo da tela, informando a senha atual e a nova.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> dar a cada pessoa o próprio login, com o acesso certo para a função.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Clique</strong> em Novo usuário.</li>
+    <li><strong>Informe</strong> nome, e-mail e uma senha inicial (mínimo de 8 caracteres).</li>
+    <li><strong>Escolha</strong> o perfil: Administrador, Gerente ou Funcionário.</li>
+    <li><strong>Salve</strong>. A pessoa entra com o identificador da empresa, o e-mail e a senha.</li>
+    <li><strong>Peça</strong> que ela troque a senha inicial no primeiro acesso, pelo ícone de chave.</li>
+    <li><strong>Desmarque</strong> “Usuário ativo” quando alguém sair da empresa.</li>
+  </ol>
+
+  <table class="perfis">
+    <tr><th>Perfil</th><th>O que pode</th></tr>
+    <tr><td>Administrador</td><td>Tudo, inclusive usuários e dados da empresa.</td></tr>
+    <tr><td>Gerente</td><td>Tudo do Funcionário, mais preços, desconto, Tabela de Preços, Parâmetros, produção, WhatsApp e agenda.</td></tr>
+    <tr><td>Funcionário</td><td>Clientes, orçamentos, atendimentos, medições, instalações e pós-venda. Não mexe em preço.</td></tr>
+  </table>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Vendedor e medidor como Funcionário: montam orçamento e agenda, e desconto e preço final ficam com o gerente.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Ninguém usa a senha do dono, e o histórico mostra quem fez cada coisa.</p>
+  </div>
+</section>
+
+<!-- ================= 19. EMPRESA ================= -->
+<section class="funcao" id="empresa">
+  <div class="etiquetas"><span class="etiqueta imp">Secundária</span></div>
+  <h2>O nome da sua vidraçaria em cada mensagem</h2>
+  <p class="meta"><b>Onde fica:</b> Configurações › Empresa
+    · <b>Quem usa:</b> Administrador.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/22-empresa.jpg" alt="Tela de dados da empresa" loading="lazy">
+    <figcaption><span class="arq">22-empresa.jpg</span> · Configurações › Empresa.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>No topo: endereço de acesso (o identificador da empresa) e a situação.</li>
+    <li>Razão social, nome fantasia, CNPJ, e-mail, telefone, WhatsApp e endereço.</li>
+    <li>Botão <strong>Salvar alterações</strong>. Mais abaixo fica o painel Agenda (seção 17).</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> guardar os dados da vidraçaria. O nome fantasia assina as mensagens de orçamento.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Abra</strong> Configurações › Empresa.</li>
+    <li><strong>Confira</strong> os dados da vidraçaria.</li>
+    <li><strong>Clique</strong> em Salvar alterações.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Use no nome fantasia o nome que o cliente conhece: é ele que aparece em “Segue o seu orçamento nº… da [sua vidraçaria]”.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>O cliente reconhece de onde vem a mensagem.</p>
+  </div>
+</section>
+
+<!-- ================= 20. SERVIÇOS ================= -->
+<section class="funcao" id="servicos">
+  <div class="etiquetas"><span class="etiqueta imp">Secundária</span></div>
+  <h2>Os serviços que a vidraçaria oferece</h2>
+  <p class="meta"><b>Onde fica:</b> menu › Serviços
+    · <b>Quem usa:</b> Gerente e Administrador cadastram; todos consultam.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/33-servicos.jpg" alt="Lista de serviços da vidraçaria, com um serviço inativo" loading="lazy">
+    <figcaption><span class="arq">33-servicos.jpg</span> · Serviços: o catálogo do que a vidraçaria faz.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>Botão <strong>Novo serviço</strong>, no topo à direita (Gerente e Administrador).</li>
+    <li>Cada serviço com nome e descrição, em ordem alfabética.</li>
+    <li>A etiqueta <strong>Inativo</strong> marca o serviço que a vidraçaria deixou de fazer.</li>
+    <li>À direita: lápis para editar e lixeira para excluir.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> manter num lugar só a lista do que a vidraçaria faz, com os nomes que a equipe usa.</p>
+  <p class="serve"><strong>Bom saber:</strong> o catálogo é de consulta. O orçamento é montado pela tipologia e pela Tabela de Preços,
+  e o atendimento automático não mostra esta lista ao cliente.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Abra</strong> Serviços no menu.</li>
+    <li><strong>Clique</strong> em Novo serviço e informe o nome e, se quiser, uma descrição.</li>
+    <li><strong>Edite</strong> pelo lápis e desmarque “Serviço ativo” quando parar de oferecer um serviço: ele fica na lista, marcado como Inativo.</li>
+    <li><strong>Exclua</strong> pela lixeira só o que foi cadastrado por engano. A exclusão não pode ser desfeita.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Use os nomes que o cliente usa no WhatsApp: “box de banheiro”, “espelho”, “troca de vidro”.
+    Assim a equipe fala a mesma língua do cliente.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>Quem entra na equipe vê de uma vez o que a vidraçaria faz e o que deixou de fazer.</p>
+  </div>
+</section>
+
+<!-- ================= 21. MATERIAIS ================= -->
+<section class="funcao" id="materiais">
+  <div class="etiquetas"><span class="etiqueta imp">Secundária</span></div>
+  <h2>Os materiais da produção</h2>
+  <p class="meta"><b>Onde fica:</b> menu › Materiais
+    · <b>Quem usa:</b> Gerente e Administrador cadastram; todos consultam.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/34-materiais.jpg" alt="Lista de materiais usados na produção, com um material inativo" loading="lazy">
+    <figcaption><span class="arq">34-materiais.jpg</span> · Materiais: vidros, perfis, ferragens e insumos da oficina.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>Botão <strong>Novo material</strong>, no topo à direita (Gerente e Administrador).</li>
+    <li>Cada material com nome e descrição (medida da chapa, embalagem, acabamento).</li>
+    <li>A etiqueta <strong>Inativo</strong> marca o material que a oficina não usa mais.</li>
+    <li>À direita: lápis para editar e lixeira para excluir.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> registrar, com nomes padronizados, o que a oficina usa para produzir.</p>
+  <p class="serve"><strong>Bom saber:</strong> o catálogo é de consulta. Ele não controla estoque, não entra na ordem de serviço
+  e não muda nenhum preço: o preço de vidro, kit e ferragem vem da Tabela de Preços.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Abra</strong> Materiais no menu.</li>
+    <li><strong>Clique</strong> em Novo material e informe o nome e, se quiser, uma descrição.</li>
+    <li><strong>Edite</strong> pelo lápis e desmarque “Material ativo” quando a oficina deixar de usar um material.</li>
+    <li><strong>Exclua</strong> pela lixeira só o que foi cadastrado por engano. A exclusão não pode ser desfeita.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de vidraceiro</span>
+    <p>Anote na descrição o que o montador procura: a medida da chapa, a cor do perfil, o tamanho do tubo de silicone.</p>
+  </div>
+  <div class="ganho">
+    <span class="t">O que muda no seu dia</span>
+    <p>O nome do material é o mesmo para quem compra, quem corta e quem instala.</p>
+  </div>
+</section>
+
+<!-- ================= 22. FLUXO ================= -->
+<section class="pagina quebra" id="fluxo">
+  <h2>Um serviço do começo ao fim</h2>
+  <p class="intro" style="margin-top:12px">As etapas que o VidraTX cobre, e a tela de cada uma.</p>
+
+  <ol class="fluxo">
+    <li class="extra">
+      <span class="etapa">Antes: o pedido chega</span>
+      O cliente chama no WhatsApp. O atendimento automático cadastra, coleta o pedido e cria a solicitação.
+      Se quiser, mande uma estimativa de preço.
+      <span class="tela-ref">Atendimentos · Visão geral › Próximas ações › Criar orçamento · Orçamento › Enviar estimativa</span>
+    </li>
+    <li>
+      <span class="etapa">Medição</span>
+      Proposta de data pelo WhatsApp, confirmação do cliente e registro da visita realizada.
+      <span class="tela-ref">Orçamento › painel Medição</span>
+    </li>
+    <li>
+      <span class="etapa">Orçamento</span>
+      Itens por tipologia, peças de corte, custo, margem e revisão do gerente.
+      <span class="tela-ref">Orçamento › Itens e cálculo · Orçamentos (funil)</span>
+    </li>
+    <li>
+      <span class="etapa">Aprovação</span>
+      Envio pelo WhatsApp. O cliente responde “1” (ou você marca como aprovado) e a ordem de serviço é aberta sozinha.
+      <span class="tela-ref">Orçamento › Enviar orçamento pelo WhatsApp</span>
+    </li>
+    <li>
+      <span class="etapa">Produção</span>
+      Aguardando produção › Em produção › Pronto › Conferido.
+      <span class="tela-ref">Ordens de serviço › painel Produção</span>
+    </li>
+    <li>
+      <span class="etapa">Instalação</span>
+      Proposta de data com equipe, confirmação do cliente, checklist e mensagem de conclusão.
+      <span class="tela-ref">Ordem de serviço › painel Instalação</span>
+    </li>
+    <li class="extra">
+      <span class="etapa">Depois: pós-venda</span>
+      Chamado aberto, atendido, resolvido e encerrado.
+      <span class="tela-ref">Ordem de serviço › painel Pós-venda</span>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 23. FAQ ================= -->
+<section class="pagina quebra faq" id="faq">
+  <h2>Perguntas frequentes</h2>
+
+  <div class="q">
+    <p class="pergunta">Funciona no celular?</p>
+    <p>Sim, pelo navegador do celular. Não precisa instalar aplicativo.
+    Na tela pequena, o menu fica recolhido no botão ☰ do topo.</p>
+  <div class="figs-2">
+  <figure class="tela-img">
+    <img src="imagens/24-celular-visao-geral.jpg" alt="Visão geral no celular" loading="lazy">
+    <figcaption><span class="arq">24-celular-visao-geral.jpg</span> · Visão geral no celular.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/25-celular-atendimento.jpg" alt="Conversa do WhatsApp no celular" loading="lazy">
+    <figcaption><span class="arq">25-celular-atendimento.jpg</span> · Respondendo o cliente pelo celular.</figcaption>
+  </figure>
+  </div>
+  </div>
+
+  <div class="q">
+    <p class="pergunta">Meus dados ficam seguros?</p>
+    <p>Cada vidraçaria só enxerga os próprios dados. As senhas são guardadas criptografadas.
+    Depois de várias senhas erradas seguidas, o login é bloqueado por alguns minutos.</p>
+    <p>Os perfis limitam quem mexe em preço. O acesso é por conexão segura (HTTPS), com cópia de segurança diária do banco.</p>
+  </div>
+
+  <div class="q">
+    <p class="pergunta">Minha equipe consegue usar?</p>
+    <p>Cada tela faz uma coisa, e os botões dizem a ação: “Enviar proposta”, “Marcar como realizada”.
+    A Visão geral mostra de quem é a vez em cada item.</p>
+    <p>Cada pessoa tem o seu login, e o Funcionário não consegue mexer em preço por engano.</p>
+  </div>
+
+  <div class="q">
+    <p class="pergunta">Preciso trocar meu número de WhatsApp?</p>
+    <p>Não. Você conecta o número atual como “aparelho conectado”, e ele continua funcionando no celular.
+    Mantenha o celular com internet: se ficar 14 dias sem uso, o WhatsApp desconecta os aparelhos conectados.</p>
+    <p>A conexão é a mesma do WhatsApp Web, não a API oficial da Meta.
+    Use para atender os seus clientes, nunca para disparo em massa.</p>
+  </div>
+
+  <div class="q">
+    <p class="pergunta">E se o WhatsApp desconectar?</p>
+    <p>As mensagens ficam na fila e saem sozinhas quando ele reconectar. O painel avisa em Configurações › WhatsApp e na Visão geral.</p>
+    <p>A equipe do VidraTX também recebe um alerta.</p>
+  </div>
+
+  <div class="q">
+    <p class="pergunta">O robô pode responder errado para o meu cliente?</p>
+    <p>Quando não entende, ele pergunta de novo. Continuou sem entender, passa para uma pessoa.
+    O cliente pode pedir atendente a qualquer momento, e você assume a conversa quando quiser.</p>
+    <p>E o robô não inventa preço: orçamento e estimativa só saem quando alguém da equipe clica para enviar.</p>
+  </div>
+
+  <div class="q">
+    <p class="pergunta">O que é o “Financeiro” que aparece no menu como “Em breve”?</p>
+    <p>É uma área que ainda não está disponível: o item aparece no fim do menu, desativado, e não abre nenhuma tela.
+    Hoje o painel não registra recebimentos nem parcelas pagas. O valor combinado com o cliente fica no orçamento aprovado.</p>
+  </div>
+
+  <div class="q">
+    <p class="pergunta">Eu trabalho com preço de custo. Serve?</p>
+    <p>Serve. Escolha “Meu custo” e o sistema sugere o preço de venda com impostos, comissão e margem.
+    Prefere informar o preço de venda direto? Também dá.</p>
+  </div>
+
+  <div class="q">
+    <p class="pergunta">Como começo?</p>
+    <p>Chame no WhatsApp e peça o teste grátis de 14 dias. Você recebe o acesso da sua vidraçaria e segue os
+    <a href="#primeiros-passos">Primeiros passos</a>.</p>
+  </div>
+</section>
+
+<!-- ================= 24. CTA ================= -->
+<section class="pagina" id="teste">
+  <div class="cta">
+    <h2>Teste o VidraTX por 14 dias, grátis</h2>
+    <p>Conecte o seu WhatsApp, monte a sua tabela e mande o seu primeiro orçamento para aprovação.</p>
+    <p>Sem calculadora, sem planilha, sem cobrar cliente por ligação.</p>
+    <a class="botao" href="https://wa.me/5511963091578?text=Quero%20testar%20o%20VidraTX%20por%2014%20dias">Quero testar grátis</a>
+    <p class="fone">WhatsApp: +55 11 96309-1578</p>
+  </div>
+</section>
+
+<!-- ================= ANEXO A. OPERADOR ================= -->
+<section class="funcao quebra" id="operador">
+  <div class="etiquetas"><span class="etiqueta imp">Anexo · equipe VidraTX</span></div>
+  <h2>Anexo A · Painel do operador VidraTX</h2>
+  <p class="meta"><b>Onde fica:</b> endereço do painel + <code>/superadmin/login</code>
+    · <b>Quem usa:</b> a equipe que opera o VidraTX (super admin). A vidraçaria não tem acesso a estas telas.</p>
+
+  <figure class="tela-img">
+    <img src="imagens/40-operador-login.jpg" alt="Tela de entrada do painel do operador, com e-mail e senha" loading="lazy">
+    <figcaption><span class="arq">40-operador-login.jpg</span> · Entrada do painel do operador.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/41-operador-empresas.jpg" alt="Painel do operador com o resumo e a lista de empresas" loading="lazy">
+    <figcaption><span class="arq">41-operador-empresas.jpg</span> · Resumo e lista de empresas, com a situação do WhatsApp de cada uma.</figcaption>
+  </figure>
+  <figure class="tela-img">
+    <img src="imagens/42-operador-nova-empresa.jpg" alt="Janela Nova empresa com nome, CNPJ, número, e-mail, endereço e senha inicial" loading="lazy" style="width:512px">
+    <figcaption><span class="arq">42-operador-nova-empresa.jpg</span> · Janela <strong>Nova empresa</strong>.</figcaption>
+  </figure>
+  <ol class="legenda">
+    <li>Entrada só com e-mail e senha: o operador não pertence a nenhuma vidraçaria.</li>
+    <li>Resumo: empresas cadastradas, ativas, desativadas e com o WhatsApp desconectado.</li>
+    <li>Cada empresa com nome e identificador (ex.: <code>/vidracaria-horizonte</code>), CNPJ, login, número de usuários,
+    data de cadastro, status e WhatsApp: <strong>Conectado</strong>, <strong>Desconectado desde…</strong> ou <strong>Nunca conectado</strong>.</li>
+    <li>À direita de cada linha: editar, redefinir a senha do login da empresa e ativar ou desativar.</li>
+    <li>Janela <strong>Nova empresa</strong>: nome, CNPJ, número, e-mail (vira o login do administrador da vidraçaria), endereço e senha inicial.</li>
+  </ol>
+
+  <p class="serve"><strong>Para que serve:</strong> criar o acesso de cada vidraçaria, acompanhar o WhatsApp de todas e suspender o acesso quando for preciso.</p>
+
+  <h3>Como usar</h3>
+  <ol class="como">
+    <li><strong>Entre</strong> em <code>/superadmin/login</code> com o e-mail e a senha do operador.</li>
+    <li><strong>Clique</strong> em Nova empresa e preencha todos os campos. O CNPJ precisa ser válido e não pode estar
+    em outra empresa. O identificador é gerado a partir do nome.</li>
+    <li><strong>Passe</strong> para a vidraçaria o endereço <code>/entrar</code>, o identificador (sem a barra), o e-mail e a senha inicial.</li>
+    <li><strong>Redefina</strong> a senha pelo ícone da linha quando o administrador da vidraçaria esquecer a dele.</li>
+    <li><strong>Desative</strong> a empresa para suspender o acesso (por exemplo, no fim do teste): ninguém dela entra no painel
+    até ela ser ativada de novo. Os dados continuam guardados.</li>
+  </ol>
+
+  <div class="dica">
+    <span class="t">Dica de operação</span>
+    <p>Olhe todo dia o cartão <strong>WhatsApp desconectado</strong>. Enquanto o WhatsApp de uma vidraçaria está fora,
+    os clientes dela ficam sem resposta automática e as mensagens da equipe esperam na fila até ele voltar.</p>
+  </div>
+</section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+auth_sessions/
+fila_webhook/
+.env
+*.log
+envios-idempotencia.json
+envios-idempotencia.json.tmp
